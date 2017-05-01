@@ -4,6 +4,7 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -15,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,19 +26,38 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppKatalog extends ListActivity {
+public class AppKatalog extends ListActivity{
 
     private PackageManager packageManager = null;
     private List<ApplicationInfo> applist=null;
     private ListView list;
-    private AppSec appSec;
+    private Button okButon;
+    private EditText tagAl;
+    private String temp;
+    private kayit yazdir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         list=(ListView) findViewById(R.id.list);
         packageManager=getPackageManager();
-        appSec = (AppSec) MainActivity.sec;
+        okButon = (Button)findViewById(R.id.okButton);
+        tagAl = (EditText)findViewById(R.id.editText);
+        temp = new String();
+        temp = "";
+        yazdir = new kayit();
+
+        okButon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                temp = tagAl.getText().toString();
+                if(temp != null && temp.equalsIgnoreCase("")){
+                    okButon.setVisibility(View.INVISIBLE);
+                    tagAl.setVisibility(View.INVISIBLE);
+                    list.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     @Override
@@ -45,7 +67,8 @@ public class AppKatalog extends ListActivity {
         ApplicationInfo app= applist.get(position);
 
         try{
-            appSec.tagEkle("a",app.packageName);
+            yazdir.update(this.temp,app.packageName);
+            startActivity(new Intent(AppKatalog.this,MainActivity.class));
             Toast.makeText(this, "Islem Basarili", Toast.LENGTH_LONG).show();
 
         }catch (NoSuchMethodError e){

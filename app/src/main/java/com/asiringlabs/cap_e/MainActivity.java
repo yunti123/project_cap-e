@@ -41,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private SpeechRecognizer speechRecognizer;
 
     private KomutVer komut;
-
+    private kayit kaydet;
+                                                            //kayit classını buraya entegre et !!!!!!!
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         debug = new String();
         debug="";
 
+        kaydet = new kayit();
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(getApplicationContext());
         speechRecognizer.setRecognitionListener(recognitionListener);
 
@@ -67,6 +69,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 setsBtn();
+            }
+        });
+
+        tagEkleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setTagEklemeBtn();
             }
         });
 
@@ -137,6 +146,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void  setTagEklemeBtn(){
         startActivity(new Intent(MainActivity.this,AppKatalog.class));
+        kaydet.oku();
+
     }
 
     private void setUpdateBtn(){                            //yüklü applerin packagenamelerini döndürür
@@ -211,7 +222,7 @@ class KomutVer extends AppCompatActivity{                   //Sesi yazıya dön�
         this.sec = uyg;
     }
 
-    public String yeniKomut(String al){                       //stringi  boşluklara göre böler ve ona göre komut oluşturur
+    public String yeniKomut(String al){                     //stringi  boşluklara göre böler ve ona göre komut oluşturur
         String pck;
         this.komutlar = al.split(" ");
         pck = this.komuts();
@@ -252,26 +263,26 @@ class KomutVer extends AppCompatActivity{                   //Sesi yazıya dön�
 
 class AppSec {                                              //!!!! Hemen hemen oldu
     private int appSayisi;
-    private String harita,yol,browser,not,muzik;
-    private String[] appList ;
+    private String harita, yol, browser, not, muzik;
+    private String[] appList;
     private String[] appTag;
     private String[] appName;
     private int son;
 
-    AppSec(int a,String[] b){
+    AppSec(int a, String[] b) {
         appSayisi = a;
         appList = b;
         this.son = 6;
         packageNames();
     }
 
-    public void  tagEkle(String tagName,String packName){
+    public void tagEkle(String tagName, String packName) {
         this.appTag[this.son] = tagName;
         this.appName[this.son] = packName;
         this.son++;
     }
 
-    private void packageNames(){                            // package nameleri tutar
+    private void packageNames() {                            // package nameleri tutar
         appTag[0] = "harita";
         appTag[1] = "yol";
         appTag[2] = "duckduckgo";
@@ -291,21 +302,21 @@ class AppSec {                                              //!!!! Hemen hemen o
         this.muzik = "com.google.android.music";
     }
 
-    public String kes(String ad,int hane){                  // bulunamassa kelimeyi kesip dene
+    public String kes(String ad, int hane) {                  // bulunamassa kelimeyi kesip dene
 
-        return ad.copyValueOf(ad.toCharArray(),0,ad.length()-hane);
+        return ad.copyValueOf(ad.toCharArray(), 0, ad.length() - hane);
     }
 
-    private String bul(String ad){                          //yüklü appları tarıyarak istenilen appin package nameini döndürür
+    private String bul(String ad) {                          //yüklü appları tarıyarak istenilen appin package nameini döndürür
         String[] adi;
         String buldum = "bos";
 
-        for(int i=0;i<appSayisi;i++){
+        for (int i = 0; i < appSayisi; i++) {
             adi = appList[i].split("[.]]");
 
-            for(int j=0;j<adi.length;j++){
+            for (int j = 0; j < adi.length; j++) {
 
-                if(adi[j].equalsIgnoreCase(ad)){
+                if (adi[j].equalsIgnoreCase(ad)) {
                     buldum = appList[i];
                     break;
                 }
@@ -315,29 +326,28 @@ class AppSec {                                              //!!!! Hemen hemen o
         return buldum;
     }
 
-    public String geriBesle(String al){                     //uygulamanın packagenameini döndürür
-        String hata ="bos";
+    public String geriBesle(String al) {                     //uygulamanın packagenameini döndürür
+        String hata = "bos";
         int adim = 0;
 
-        while (adim < al.length() && adim <5){
+        while (adim < al.length() && adim < 5) {
 
-            if(hata.equals("bos")){
+            if (hata.equals("bos")) {
 
-                for(int i = 0;i<this.son;i++){
+                for (int i = 0; i < this.son; i++) {
 
-                    if(al.equalsIgnoreCase(appTag[i]))
+                    if (al.equalsIgnoreCase(appTag[i]))
                         return appName[i];
                 }
 
-                if(adim == 0)
+                if (adim == 0)
                     hata = bul(al);
                 else
-                    hata = bul(kes(al,adim));
-            }
-            else
+                    hata = bul(kes(al, adim));
+            } else
                 break;
 
-            adim ++;
+            adim++;
         }
 
         return hata;
