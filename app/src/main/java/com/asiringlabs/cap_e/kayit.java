@@ -10,7 +10,7 @@ import java.io.IOException;
 
 
 /**
- * Created by patuhan on 4/29/17.
+ * Created by yunty on 4/29/17.
  */
 
 public class kayit extends AppCompatActivity {

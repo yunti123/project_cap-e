@@ -64,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(getApplicationContext());
         speechRecognizer.setRecognitionListener(recognitionListener);
 
+        listOfApp = listele();
+        sec = new AppSec(listOfApp.length,listOfApp);
+        komut = new KomutVer(sec);
+
 
         sBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,16 +150,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void  setTagEklemeBtn(){
         startActivity(new Intent(MainActivity.this,AppKatalog.class));
-        kaydet.oku();
+        setUpdateBtn();
 
     }
 
     private void setUpdateBtn(){                            //yüklü applerin packagenamelerini döndürür
 
         msg("Güncelleme yapılıyor.......");
-        listOfApp = listele();
-        sec = new AppSec(listOfApp.length,listOfApp);
-        komut = new KomutVer(sec);
+        kaydet.oku();
+        String[] tg = kaydet.getTag();
+        String[] pc = kaydet.getPck();
+        int len = tg.length;
+        for(int i=0;i<len;i++){
+            sec.tagEkle(tg[i],pc[i]);
+        }
         msg("Güncelleme başarılı ..");
 
     }
